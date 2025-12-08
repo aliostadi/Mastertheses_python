@@ -1,6 +1,6 @@
 *.docx
 env/
-env_python39
+env_python39/
 .venv/
 __pycache__/
 .ipynb_checkpoints/
