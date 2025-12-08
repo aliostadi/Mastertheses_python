@@ -1,0 +1,14 @@
+# Core ML packages only
+tensorflow==2.10.0
+pandas==2.0.3
+numpy==1.24.4
+scikit-learn==1.3.2
+matplotlib==3.7.5
+seaborn==0.12.2
+
+# Database
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+
+# Deep Learning utilities
+joblib==1.3.2
