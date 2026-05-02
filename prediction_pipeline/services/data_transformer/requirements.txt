@@ -1,0 +1,6 @@
+# Data Transformer Requirements
+# Install with: pip install -r requirements.txt
+
+psycopg2-binary>=2.9.0
+python-dotenv>=1.0.0
+schedule>=1.2.0

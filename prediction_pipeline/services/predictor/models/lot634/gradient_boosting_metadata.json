@@ -1,0 +1,38 @@
+{
+    "model_name": "Gradient_Boosting",
+    "timestamp": "2026-02-28 17:41:28",
+    "metrics": {
+        "val": {
+            "mse": 38.39706576527237,
+            "rmse": 6.1965365943624,
+            "mae": 3.950445185968487,
+            "r2": 0.8723333963255553,
+            "mape": 12.890952973803316
+        },
+        "test": {
+            "mse": 27.217669966069394,
+            "rmse": 5.217055679793861,
+            "mae": 3.374254836571199,
+            "r2": 0.9144983414289886,
+            "mape": 9.727161973524098
+        }
+    },
+    "performance": {
+        "training_time": 254.23900246620178,
+        "val_prediction_time": 0.19049763679504395,
+        "test_prediction_time": 0.20412278175354004,
+        "val_pred_per_sample": 0.00013210654424066848,
+        "test_pred_per_sample": 0.00014384974048875268,
+        "model_size_kb": 5693.3232421875,
+        "memory_used_mb": 6.12109375,
+        "cpu_percent": 0.45,
+        "gpu_memory_used_mb": 0.0,
+        "gpu_utilization_percent": 0
+    },
+    "model_size_kb": 5693.3232421875,
+    "training_time_sec": 254.23900246620178,
+    "test_rmse": 5.217055679793861,
+    "test_mae": 3.374254836571199,
+    "test_r2": 0.9144983414289886,
+    "test_mape": 9.727161973524098
+}

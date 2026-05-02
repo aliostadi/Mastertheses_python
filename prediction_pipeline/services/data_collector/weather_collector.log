@@ -1,0 +1,26 @@
+2025-12-19 15:44:28,066 - __main__ - INFO - Weather API Client initialized for coordinates: 49.891, 10.887
+2025-12-19 15:44:28,066 - __main__ - INFO - Database config: localhost:5435/parking_predictions
+2025-12-19 15:44:28,067 - __main__ - INFO - Weather Collector Service initialized
+2025-12-19 15:44:28,067 - __main__ - INFO - Running weather collection once...
+2025-12-19 15:44:28,067 - __main__ - INFO - ============================================================
+2025-12-19 15:44:28,067 - __main__ - INFO - Starting weather data collection cycle
+2025-12-19 15:44:28,067 - __main__ - INFO - ============================================================
+2025-12-19 15:44:28,068 - __main__ - INFO - Fetching weather data from 2025-12-19 to 2025-12-20
+2025-12-19 15:44:28,626 - __main__ - INFO - Successfully fetched 48 weather records
+2025-12-19 15:44:49,811 - __main__ - INFO - Successfully inserted/updated 48 weather records
+2025-12-19 15:45:10,910 - __main__ - INFO - Latest weather: 2025-12-20 23:00:00+00:00 - Temp: 3.30°C, Humidity: 100.00%, Precipitation: 0.00mm
+2025-12-19 15:45:10,911 - __main__ - INFO - Collection cycle completed: 48 records processed
+2025-12-19 15:45:10,911 - __main__ - INFO - ============================================================
+2025-12-19 15:52:36,472 - __main__ - INFO - Weather API Client initialized for coordinates: 49.891, 10.887
+2025-12-19 15:52:36,472 - __main__ - INFO - Database config: localhost:5435/parking_predictions
+2025-12-19 15:52:36,473 - __main__ - INFO - Weather Collector Service initialized
+2025-12-19 15:52:36,473 - __main__ - INFO - Running weather collection once...
+2025-12-19 15:52:36,473 - __main__ - INFO - ============================================================
+2025-12-19 15:52:36,474 - __main__ - INFO - Starting weather data collection cycle
+2025-12-19 15:52:36,474 - __main__ - INFO - ============================================================
+2025-12-19 15:52:36,475 - __main__ - INFO - Fetching weather data for: 2025-12-19 15:00
+2025-12-19 15:52:37,182 - __main__ - INFO - Successfully fetched 1 weather records
+2025-12-19 15:52:58,275 - __main__ - INFO - Successfully inserted/updated 1 weather records
+2025-12-19 15:53:19,397 - __main__ - INFO - Latest weather: 2025-12-20 23:00:00+00:00 - Temp: 3.30°C, Humidity: 100.00%, Precipitation: 0.00mm
+2025-12-19 15:53:19,397 - __main__ - INFO - Collection cycle completed: 1 records processed
+2025-12-19 15:53:19,398 - __main__ - INFO - ============================================================

@@ -1,0 +1,10 @@
+2025-12-24 19:33:32,108 - __main__ - INFO - ============================================================
+2025-12-24 19:33:32,108 - __main__ - INFO - Starting hourly aggregation process
+2025-12-24 19:33:32,108 - __main__ - INFO - ============================================================
+2025-12-24 19:33:32,108 - __main__ - INFO - Hourly Aggregator initialized for DB: parking_predictions
+2025-12-24 19:33:53,283 - __main__ - INFO - Found 0 minute records for last complete hour
+2025-12-24 19:38:24,827 - __main__ - INFO - ============================================================
+2025-12-24 19:38:24,840 - __main__ - INFO - Starting hourly aggregation process
+2025-12-24 19:38:24,840 - __main__ - INFO - ============================================================
+2025-12-24 19:38:24,840 - __main__ - INFO - Hourly Aggregator initialized for DB: parking_predictions
+2025-12-24 19:38:46,121 - __main__ - INFO - Found 0 minute records for last complete hour

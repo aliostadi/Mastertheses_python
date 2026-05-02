@@ -1,0 +1,41 @@
+{
+    "model_name": "Encoder Decoder",
+    "timestamp": "2026-03-01 12:42:03",
+    "metrics": {
+        "val": {
+            "mse": 57.02492437487977,
+            "rmse": 7.551484911914992,
+            "mae": 5.740836656934052,
+            "r2": 0.8007039007652497,
+            "mape": 10.6908896229438
+        },
+        "test": {
+            "mse": 132.16071180657045,
+            "rmse": 11.49611724916593,
+            "mae": 9.565692758187033,
+            "r2": 0.6655379878673509,
+            "mape": 11.267288891248905
+        }
+    },
+    "performance": {
+        "training_time": 138.71101927757263,
+        "val_prediction_time": 1.0189030170440674,
+        "test_prediction_time": 0.3340182304382324,
+        "val_pred_per_sample": 0.0004128456308930581,
+        "test_pred_per_sample": 0.00013661277318537113,
+        "model_size_kb": 3361.650390625,
+        "memory_used_mb": 104.11328125,
+        "cpu_percent": 8.850000000000001,
+        "gpu_memory_used_mb": 3.377197265625,
+        "gpu_utilization_percent": 0
+    },
+    "input_shape": [
+        null,
+        48,
+        20
+    ],
+    "output_shape": [
+        null,
+        24
+    ]
+}

@@ -1,0 +1,32 @@
+# ============================================================================
+# settings.py.example - TEMPLATE FOR CONFIGURATION
+# ============================================================================
+# INSTRUCTIONS: Copy this file to "settings.py" and fill in your own values!
+# 
+# ============================================================================
+
+# PostgreSQL Database URL
+# Format: postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE
+# 
+#
+# For REMOTE PostgreSQL (university server):
+#   DB_URL = "postgresql://USERNAME:PASSWORD@141.13.162.160:5432/parking"
+#
+DB_URL = "postgresql://parking_user:your_password_here@localhost:5432/parking"
+
+# Parking Pilot API Credentials
+# Username and password for https://api.parking-pilot.de
+# API key will be fetched automatically at runtime
+PARKING_API_USERNAME = "FutureIOT_MOBI"
+PARKING_API_PASSWORD = "your_password_here"
+
+# Start and end timestamps for parking data ingestion - should be less than one year
+# Unix timestamps (seconds since Jan 1, 1970)
+# Example: 2024-12-01 to 2025-12-01
+START_TS = 1733007600  
+END_TS = 1764370800    
+
+# Start and end date for weather data ingestion
+# Format: YYYY-MM-DD
+start_date_weather = "2024-01-01"
+end_date_weather = "2025-11-30"

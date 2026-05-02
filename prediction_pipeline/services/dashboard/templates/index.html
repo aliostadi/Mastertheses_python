@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bamberg Parking Availability Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .current-time {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #888;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            color: #888;
+            font-size: 1rem;
+        }
+        
+        .weather-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .weather-current {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .weather-stat {
+            text-align: center;
+        }
+        
+        .weather-stat .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .weather-stat .label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        .lot-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .lot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .lot-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .lot-meta {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        /* KPI Cards - Aligned with Weather Stats */
+        .kpi-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .kpi-card {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .kpi-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .kpi-card .label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .kpi-label {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        
+        .kpi-sublabel {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .kpi-card.status-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kpi-card.status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .chart-card {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #aaa;
+        }
+        
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 320px;
+        }
+        
+        /* Removed availability labels/dots - now using KPI cards instead */
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .weather-forecast-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .forecast-chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #888;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-left: 4px solid #00d4ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .update-info {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .error-message {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            color: #e74c3c;
+        }
+
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 280px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="current-time" id="current-time"></div>
+        <h1>🚗 Bamberg Parking Availability</h1>
+        <p class="subtitle">Enhanced Hybrid ML Prediction Dashboard</p>
+    </div>
+    
+    <script>
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('current-time').textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        // Update time immediately and then every second
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+    </script>
+    
+    <!-- Current Weather Section -->
+    <div class="weather-section">
+        <div id="weather-current" class="weather-current">
+            <div class="loading">
+                <div class="spinner"></div>
+                <span>Loading weather data...</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Parking Lots Container -->
+    <div id="lots-container">
+        <div class="loading">
+            <div class="spinner"></div>
+            <span>Loading predictions...</span>
+        </div>
+    </div>
+    
+    <!-- Weather Forecast Chart -->
+    <div class="weather-forecast-section">
+        <h2 class="section-title">🌡️ 24-Hour Temperature Forecast</h2>
+        <div class="forecast-chart-container">
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="update-info" id="update-info">
+        Last updated: --
+    </div>
+
+    <script>
+        // Chart.js global defaults
+        Chart.defaults.color = '#888';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+        
+        let parkingCharts = {};
+        let trendCharts = {};
+        let weatherChart = null;
+        
+        // Availability category colors
+        const categoryColors = {
+            'Very High': '#2ecc71',
+            'High': '#f1c40f',
+            'Low': '#e67e22',
+            'Very Low': '#e74c3c'
+        };
+        
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch('/api/dashboard');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    updateWeather(data.weather);
+                    updateParkingLots(data.predictions, data.historical, data.current_status);
+                    document.getElementById('update-info').textContent = 
+                        `Last updated: ${new Date().toLocaleString()}`;
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                document.getElementById('lots-container').innerHTML = 
+                    '<div class="error-message">Failed to load data. Please refresh the page.</div>';
+            }
+        }
+        
+        function updateWeather(weather) {
+            if (!weather) {
+                document.getElementById('weather-current').innerHTML = 
+                    '<div class="error-message">Weather data unavailable</div>';
+                return;
+            }
+            
+            const current = weather.current;
+            document.getElementById('weather-current').innerHTML = `
+                <div class="weather-stat">
+                    <div class="value">${current.temperature?.toFixed(1) ?? '--'}°C</div>
+                    <div class="label">Temperature</div>
+                </div>
+                <div class="weather-stat">
+                    <div class="value">${current.humidity ?? '--'}%</div>
+                    <div class="label">Humidity</div>
+                </div>
+                <div class="weather-stat">
+                    <div class="value">${current.precipitation?.toFixed(1) ?? '0'} mm</div>
+                    <div class="label">Precipitation</div>
+                </div>
+                <div class="weather-stat">
+                    <div class="value" style="font-size: 1.5rem;">${current.weather ?? '--'}</div>
+                    <div class="label">Condition</div>
+                </div>
+            `;
+            
+            // Update weather forecast chart
+            updateWeatherChart(weather.forecast);
+        }
+        
+        function updateWeatherChart(forecast) {
+            const ctx = document.getElementById('weatherChart').getContext('2d');
+            
+            if (weatherChart) {
+                weatherChart.destroy();
+            }
+            
+            weatherChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: forecast.hours,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: forecast.temperatures,
+                        borderColor: '#00d4ff',
+                        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#00d4ff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const idx = context.dataIndex;
+                                    return `${forecast.weather_descriptions[idx]}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255,255,255,0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateParkingLots(predictions, historical, currentStatus) {
+            const container = document.getElementById('lots-container');
+            container.innerHTML = '';
+            
+            Object.entries(predictions).forEach(([lotId, predData]) => {
+                const histData = historical[lotId] || null;
+                const statusData = currentStatus ? currentStatus[lotId] : null;
+                const lotSection = createLotSection(lotId, predData, histData, statusData);
+                container.appendChild(lotSection);
+            });
+        }
+        
+        function createLotSection(lotId, predData, histData, statusData) {
+            const section = document.createElement('div');
+            section.className = 'lot-section';
+            
+            // Fix date parsing - handle both with and without timezone
+            let predTime;
+            try {
+                // Try parsing as-is first
+                predTime = new Date(predData.prediction_time);
+                // If invalid, try adding Z for UTC
+                if (isNaN(predTime.getTime())) {
+                    predTime = new Date(predData.prediction_time + "Z");
+                }
+            } catch {
+                predTime = new Date(); // Fallback to current time
+            }
+            
+            // Current status from minute data
+            const currentFree = statusData ? statusData.free_spaces : predData.free_spots[0];
+            const currentOccupied = statusData ? statusData.occupied_spaces : predData.occupied_spots[0];
+            const currentProb = statusData ? statusData.availability_probability : (predData.probabilities[0] * 100).toFixed(1);
+            const currentCategory = statusData ? statusData.availability_category : predData.categories[0];
+            const categoryColor = categoryColors[currentCategory] || '#888';
+            const statusTime = statusData ? new Date(statusData.timestamp).toLocaleTimeString() : '--';
+            
+            section.innerHTML = `
+                <div class="lot-header">
+                    <div>
+                        <div class="lot-title">🅿️ Parking Lot ${lotId}</div>
+                        <div class="lot-meta">Capacity: ${predData.capacity} spots</div>
+                    </div>
+                    <div class="lot-meta">
+                        Last prediction: ${predTime.toLocaleString()}
+                    </div>
+                </div>
+                
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">📊 Hourly Availability (Next 24 Hours)</div>
+                        <div class="legend-container">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #646464;"></div>
+                                <span>Occupied</span>
+                            </div>
+                            <span style="margin: 0 10px; color: #555;">|</span>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #2ecc71;"></div>
+                                <span>Very High (≥50%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #f1c40f;"></div>
+                                <span>High (≥30%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #e67e22;"></div>
+                                <span>Low (≥15%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #e74c3c;"></div>
+                                <span>Very Low (&lt;15%)</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="hourly-${lotId}"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">📈 Trend (48h History + 24h Prediction)</div>
+                        <div class="legend-container">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #3498db;"></div>
+                                <span>Historical</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #9b59b6;"></div>
+                                <span>Predicted</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trend-${lotId}"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Create charts after section is added to DOM
+            setTimeout(() => {
+                createHourlyChart(lotId, predData);
+                createTrendChart(lotId, predData, histData);
+            }, 0);
+            
+            return section;
+        }
+        
+        function createHourlyChart(lotId, data) {
+            const ctx = document.getElementById(`hourly-${lotId}`);
+            if (!ctx) return;
+            
+            if (parkingCharts[lotId]) {
+                parkingCharts[lotId].destroy();
+            }
+            
+            // Color each bar based on availability category
+            const barColors = data.categories.map(cat => categoryColors[cat]);
+            const barBorderColors = data.categories.map(cat => {
+                // Darker version for border
+                const colors = {
+                    'Very High': '#1e8449',
+                    'High': '#b7950b',
+                    'Low': '#a04000',
+                    'Very Low': '#922b21'
+                };
+                return colors[cat] || '#555';
+            });
+            
+            // Order: Free at bottom (index 0), Occupied on top (index 1)
+            // Free bars are colored by availability category
+            parkingCharts[lotId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.hours,
+                    datasets: [
+                        {
+                            label: 'Free',
+                            data: data.free_spots,
+                            backgroundColor: barColors,
+                            borderColor: barBorderColors,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Occupied',
+                            data: data.occupied_spots,
+                            backgroundColor: 'rgba(100, 100, 100, 0.7)',
+                            borderColor: '#555',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterBody: function(context) {
+                                    const idx = context[0].dataIndex;
+                                    const prob = (data.probabilities[idx] * 100).toFixed(0);
+                                    const cat = data.categories[idx];
+                                    return [
+                                        '',
+                                        `Free: ${data.free_spots[idx]} spots`,
+                                        `Occupied: ${data.occupied_spots[idx]} spots`,
+                                        '',
+                                        `Chance of finding spot: ${prob}%`,
+                                        `Availability: ${cat}`
+                                    ];
+                                },
+                                title: function(context) {
+                                    return `Hour: ${context[0].label}`;
+                                },
+                                label: function() { return ''; }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: {
+                                color: 'rgba(255,255,255,0.05)'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            max: data.capacity,
+                            title: {
+                                display: true,
+                                text: 'Parking Spots'
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createTrendChart(lotId, predData, histData) {
+            const ctx = document.getElementById(`trend-${lotId}`);
+            if (!ctx) return;
+            
+            if (trendCharts[lotId]) {
+                trendCharts[lotId].destroy();
+            }
+            
+            // Combine historical + prediction data
+            let labels = [];
+            let historicalValues = [];
+            let predictionValues = [];
+            
+            if (histData && histData.full_timestamps) {
+                // Use last 48 hours of historical data
+                histData.full_timestamps.forEach((ts, idx) => {
+                    const date = new Date(ts);
+                    labels.push(date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit' }));
+                    historicalValues.push(histData.free_spots[idx]);
+                    predictionValues.push(null);  // No prediction for historical period
+                });
+            }
+            
+            // Add prediction data
+            if (predData && predData.target_hours) {
+                predData.target_hours.forEach((ts, idx) => {
+                    const date = new Date(ts);
+                    labels.push(date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit' }));
+                    historicalValues.push(null);  // No historical for prediction period
+                    predictionValues.push(predData.free_spots[idx]);
+                });
+            }
+            
+            // Find the transition point (where historical ends and prediction begins)
+            const transitionIndex = histData ? histData.full_timestamps.length : 0;
+            
+            trendCharts[lotId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Historical',
+                            data: historicalValues,
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 2,
+                            pointBackgroundColor: '#3498db',
+                            spanGaps: false
+                        },
+                        {
+                            label: 'Predicted',
+                            data: predictionValues,
+                            borderColor: '#9b59b6',
+                            backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#9b59b6',
+                            borderDash: [5, 5],
+                            spanGaps: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.raw === null) return '';
+                                    const label = context.dataset.label;
+                                    return `${label}: ${Math.round(context.raw)} free spots`;
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                nowLine: {
+                                    type: 'line',
+                                    xMin: transitionIndex - 0.5,
+                                    xMax: transitionIndex - 0.5,
+                                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                                    borderWidth: 2,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        display: true,
+                                        content: 'Now',
+                                        position: 'start',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                        color: '#fff'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255,255,255,0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                maxTicksLimit: 12
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: predData.capacity,
+                            title: {
+                                display: true,
+                                text: 'Free Spots'
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initial load
+        fetchDashboardData();
+        
+        // Auto-refresh every 5 minutes
+        setInterval(fetchDashboardData, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

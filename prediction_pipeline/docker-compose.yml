@@ -1,0 +1,148 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: parking_prediction_db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: Europe/Berlin
+    volumes:
+      - ./database/postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5435:5432"
+    restart: always
+    networks:
+      - parking_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: parking_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    restart: always
+    networks:
+      - parking_network
+    depends_on:
+      - postgres
+
+  # Parking Data Collector - Runs every 1 minute
+  parking_collector:
+    build:
+      context: ./services/data_collector
+      dockerfile: Dockerfile.parking
+    container_name: parking_collector
+    environment:
+      TZ: Europe/Berlin
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      PARKING_API_USERNAME: ${PARKING_API_USERNAME}
+      PARKING_API_PASSWORD: ${PARKING_API_PASSWORD}
+    networks:
+      - parking_network
+    depends_on:
+      - postgres
+    restart: always
+
+  # Weather Data Collector - Runs every 1 hour
+  weather_collector:
+    build:
+      context: ./services/data_collector
+      dockerfile: Dockerfile.weather
+    container_name: weather_collector
+    environment:
+      TZ: Europe/Berlin
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - parking_network
+    depends_on:
+      - postgres
+    restart: always
+
+  # Data Transformer - Runs every 1 hour (5 min after weather)
+  data_transformer:
+    build:
+      context: ./services/data_transformer
+      dockerfile: Dockerfile
+    container_name: data_transformer
+    environment:
+      TZ: Europe/Berlin
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - parking_network
+    depends_on:
+      - postgres
+      - parking_collector
+      - weather_collector
+    restart: always
+
+  # Predictor Service - Runs predictions for all lots
+  predictor:
+    build:
+      context: ./services/predictor
+      dockerfile: Dockerfile
+    container_name: parking_predictor
+    environment:
+      TZ: Europe/Berlin
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      MODEL_DIR: /app/models
+    networks:
+      - parking_network
+    depends_on:
+      - postgres
+      - data_transformer
+    restart: always
+
+  # Dashboard Web App - Visualizes predictions
+  dashboard:
+    build:
+      context: ./services/dashboard
+      dockerfile: Dockerfile
+    container_name: parking_dashboard
+    environment:
+      TZ: Europe/Berlin
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      PORT: ${DASHBOARD_PORT}
+      DEBUG: "false"
+    ports:
+      - "5000:5000"
+    networks:
+      - parking_network
+    depends_on:
+      - postgres
+      - predictor
+    restart: always
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+networks:
+  parking_network:
+    driver: bridge
+
+# Note: Volumes are now bind mounts to local directories
+# - PostgreSQL data: ./database/postgres_data
+# - pgAdmin data: ./database/pgadmin_data

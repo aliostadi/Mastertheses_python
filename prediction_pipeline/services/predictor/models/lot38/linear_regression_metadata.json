@@ -1,0 +1,38 @@
+{
+    "model_name": "Linear_Regression",
+    "timestamp": "2026-03-01 11:42:00",
+    "metrics": {
+        "val": {
+            "mse": 50.861705870972294,
+            "rmse": 7.131739329993231,
+            "mae": 5.287099151927439,
+            "r2": 0.8218668078524471,
+            "mape": 10.021949511929355
+        },
+        "test": {
+            "mse": 149.48604568068538,
+            "rmse": 12.226448612769179,
+            "mae": 8.56691716902287,
+            "r2": 0.6204950426353424,
+            "mape": 9.336030853560489
+        }
+    },
+    "performance": {
+        "training_time": 21.104376554489136,
+        "val_prediction_time": 0.042758941650390625,
+        "test_prediction_time": 0.042028188705444336,
+        "val_pred_per_sample": 1.732534102527983e-05,
+        "test_pred_per_sample": 1.7189443233310566e-05,
+        "model_size_kb": 363.4658203125,
+        "memory_used_mb": 5.65625,
+        "cpu_percent": 4.25,
+        "gpu_memory_used_mb": 0.0,
+        "gpu_utilization_percent": 0
+    },
+    "model_size_kb": 363.4658203125,
+    "training_time_sec": 21.104376554489136,
+    "test_rmse": 12.226448612769179,
+    "test_mae": 8.56691716902287,
+    "test_r2": 0.6204950426353424,
+    "test_mape": 9.336030853560489
+}

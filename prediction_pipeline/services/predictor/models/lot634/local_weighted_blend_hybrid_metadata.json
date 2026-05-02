@@ -1,0 +1,52 @@
+{
+    "model_name": "Local Weighted Blend Hybrid",
+    "timestamp": "2026-02-28 18:19:45",
+    "alpha_strategy": "Local Weighted Blend (per horizon)",
+    "optimized_alpha_per_horizon": [
+        0.9,
+        0.75,
+        0.65,
+        0.5,
+        0.35,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.35,
+        0.35,
+        0.35,
+        0.35,
+        0.4,
+        0.4,
+        0.4,
+        0.25,
+        0.2,
+        0.2,
+        0.35,
+        0.3,
+        0.25,
+        0.4
+    ],
+    "metrics": {
+        "test": {
+            "mse": 25.604622033790367,
+            "rmse": 5.0601009904734475,
+            "mae": 3.265319502869907,
+            "r2": 0.919565157643983,
+            "mape": 9.333602405098112
+        }
+    },
+    "performance": {
+        "training_time": 0.0,
+        "val_prediction_time": 0.0,
+        "test_prediction_time": 0.0,
+        "val_pred_per_sample": 0.0,
+        "test_pred_per_sample": 0.0,
+        "model_size_kb": 0.0,
+        "memory_used_mb": 0.0,
+        "cpu_percent": 0.0,
+        "gpu_memory_used_mb": 0.0,
+        "gpu_utilization_percent": 0.0
+    }
+}

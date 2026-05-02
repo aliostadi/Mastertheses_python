@@ -1,0 +1,10 @@
+2025-12-24 19:33:53,561 - __main__ - INFO - ============================================================
+2025-12-24 19:33:53,561 - __main__ - INFO - Starting feature engineering process
+2025-12-24 19:33:53,561 - __main__ - INFO - ============================================================
+2025-12-24 19:33:53,561 - __main__ - INFO - Feature Engineer initialized for DB: parking_predictions
+2025-12-24 19:34:14,700 - __main__ - INFO - Found 0 parking records and 0 weather records for last hour
+2025-12-24 19:38:46,561 - __main__ - INFO - ============================================================
+2025-12-24 19:38:46,570 - __main__ - INFO - Starting feature engineering process
+2025-12-24 19:38:46,570 - __main__ - INFO - ============================================================
+2025-12-24 19:38:46,570 - __main__ - INFO - Feature Engineer initialized for DB: parking_predictions
+2025-12-24 19:39:07,703 - __main__ - INFO - Found 0 parking records and 0 weather records for last hour

@@ -1,0 +1,16 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install PostgreSQL client
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy weather collector script
+COPY weather_collector.py .
+
+# Run every hour (using sleep loop)
+CMD ["sh", "-c", "while true; do python weather_collector.py --once && sleep 3600; done"]

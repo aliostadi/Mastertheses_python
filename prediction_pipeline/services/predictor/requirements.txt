@@ -1,0 +1,11 @@
+# Parking Predictor Requirements
+# Install with: pip install -r requirements.txt
+
+# Core dependencies - versions must be compatible
+numpy==2.0.2
+pandas==2.2.3
+scikit-learn==1.6.1
+psycopg2-binary>=2.9.0
+python-dotenv>=1.0.0
+schedule>=1.2.0
+tensorflow>=2.15.0

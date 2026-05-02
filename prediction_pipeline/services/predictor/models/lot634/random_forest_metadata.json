@@ -1,0 +1,38 @@
+{
+    "model_name": "Random_Forest",
+    "timestamp": "2026-02-28 17:37:09",
+    "metrics": {
+        "val": {
+            "mse": 37.03099177649733,
+            "rmse": 6.085309505398828,
+            "mae": 3.826478417073927,
+            "r2": 0.8768874468601148,
+            "mape": 12.161843992191546
+        },
+        "test": {
+            "mse": 27.415238178512272,
+            "rmse": 5.235956281188019,
+            "mae": 3.431523469332863,
+            "r2": 0.9138854322664427,
+            "mape": 9.898668922540947
+        }
+    },
+    "performance": {
+        "training_time": 43.77736568450928,
+        "val_prediction_time": 0.0483241081237793,
+        "test_prediction_time": 0.04837369918823242,
+        "val_pred_per_sample": 3.3511864163508525e-05,
+        "test_pred_per_sample": 3.408999238071348e-05,
+        "model_size_kb": 35372.31640625,
+        "memory_used_mb": 43.0703125,
+        "cpu_percent": 2.55,
+        "gpu_memory_used_mb": 0.0,
+        "gpu_utilization_percent": 0
+    },
+    "model_size_kb": 35372.31640625,
+    "training_time_sec": 43.77736568450928,
+    "test_rmse": 5.235956281188019,
+    "test_mae": 3.431523469332863,
+    "test_r2": 0.9138854322664427,
+    "test_mape": 9.898668922540947
+}
